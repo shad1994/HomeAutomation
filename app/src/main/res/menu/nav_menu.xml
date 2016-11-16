@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/livingroom"
+        android:title="Living Room"
+        android:icon="@drawable/homepic"></item>
+
+    <item
+        android:id="@+id/bedroom"
+        android:title="Bed Room"
+        android:icon="@drawable/homepic"></item>
+
+    <item
+        android:id="@+id/kitchen"
+        android:title="Kitchen"
+        android:icon="@drawable/homepic"></item>
+
+    <item
+        android:id="@+id/hall"
+        android:title="Hall"
+        android:icon="@drawable/homepic"></item>
+
+
+</menu>
