@@ -8,9 +8,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -49,7 +51,9 @@ public class HomePage extends AppCompatActivity {
         musicswitch = (Switch) findViewById(R.id.musicswitch);
         acswitch = (Switch) findViewById(R.id.acswitch);
 
-
+        VolleySingleton volleySingleton=VolleySingleton.getsInstance();
+        // Instantiate the RequestQueue.
+         queue =volleySingleton.getRequestQueue() ;
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name,
                 R.string.app_name);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -67,27 +71,23 @@ public class HomePage extends AppCompatActivity {
 
         View headerLayout =
                 mNavigationView.inflateHeaderView(R.layout.nv_header);
-
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="https://api.thingspeak.com/update?api_key=QIJ86HUNRI2MPH9R&field1=1";
-
-// Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-
-                    }
-                }, new Response.ErrorListener() {
+        fanswitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b)
+                {
+                    sendRequest("https://api.thingspeak.com/update?api_key=QIJ86HUNRI2MPH9R&field1=1");
+
+                }else{
+                    Toast.makeText(HomePage.this,"trigger false",Toast.LENGTH_SHORT).show();
+                    sendRequest("https://api.thingspeak.com/update?api_key=QIJ86HUNRI2MPH9R&field1=0");
+
+                }
+
 
             }
         });
-// Add the request to the RequestQueue.
-        queue.add(stringRequest);
+
 
       /*  // Instantiate the RequestQueue.
        queue = Volley.newRequestQueue(this);*/
@@ -171,6 +171,27 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void sendRequest(final String url) {
+
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        Log.d("logg","url "+url+"\n"+response);
+                    Toast.makeText(HomePage.this,"successful trigger",Toast.LENGTH_SHORT).show();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 
 
